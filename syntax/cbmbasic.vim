@@ -3,7 +3,7 @@
 " Maintainer: Thomas Knox
 " Latest Revision: 21 July 2020
 
-if exists("b:current_synaxtax")
+if exists("b:current_syntax")
     finish
 endif
 
