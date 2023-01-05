@@ -22,10 +22,23 @@ syntax keyword cbmBasicLanguageKeywords RIGHT$ RND RUN SAVE SGN SIN
 syntax keyword cbmBasicLanguageKeywords SPC SQR ST STATUS STEP STOP STR$
 syntax keyword cbmBasicLanguageKeywords SYS TAB TAN THEN TI TIME TI$ TIME$
 syntax keyword cbmBasicLanguageKeywords TO USR VAL VERIFY WAIT
+syntax keyword cbmBasicLanguageKeywords abs and asc atn chr$ close
+syntax keyword cbmBasicLanguageKeywords clr cmd cont cos data def
+syntax keyword cbmBasicLanguageKeywords dim end exp fn for fre
+syntax keyword cbmBasicLanguageKeywords get get# gosub goto if input
+syntax keyword cbmBasicLanguageKeywords input# int left$ len let list
+syntax keyword cbmBasicLanguageKeywords load log mid$ new next not
+syntax keyword cbmBasicLanguageKeywords on open or peek poke pos
+syntax keyword cbmBasicLanguageKeywords print print# read restore return
+syntax keyword cbmBasicLanguageKeywords right$ rnd run save sgn sin
+syntax keyword cbmBasicLanguageKeywords spc sqr st status step stop str$
+syntax keyword cbmBasicLanguageKeywords sys tab tan then ti time ti$ time$
+syntax keyword cbmBasicLanguageKeywords to usr val verify wait
 
 highlight link cbmBasicLanguageKeywords Keyword
 
 syntax match cbmBasicComment "\vREM.*$"
+syntax match cbmBasicComment "\vrem.*$"
 syntax match cbmBasicComment "\v\#\!.*$"
 highlight link cbmBasicComment Comment
 
