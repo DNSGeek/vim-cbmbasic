@@ -46,6 +46,15 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          # On a pull_request event the default ref is the refs/pull/N/merge
+          # commit, so the work tree ends up on a detached HEAD and the bare
+          # "git push" in the commit step below dies with "You are not
+          # currently on a branch." Check out the PR's head branch by name
+          # instead, from the head repository so that fork PRs still resolve.
+          # Both fall back to the defaults on a push event, where head_ref is
+          # empty and checkout already lands on a real branch.
+          ref: ${{ github.head_ref || github.ref }}
+          repository: ${{ github.event.pull_request.head.repo.full_name || github.repository }}
           token: ${{ secrets.GITHUB_TOKEN }}
 
       # ── Shell ────────────────────────────────────────────────────────────────
@@ -262,8 +271,23 @@ jobs:
         run: |
           git diff --quiet . || echo "changed=true" >> "$GITHUB_OUTPUT"
 
+      # A pull_request event from a fork gets a read-only GITHUB_TOKEN, whatever
+      # the permissions block says, so there is nothing to push with. Say so
+      # rather than failing the job on a push that cannot succeed.
+      - name: Report formatting changes that cannot be pushed
+        if: >-
+          steps.verify_diff.outputs.changed == 'true'
+          && github.event_name == 'pull_request'
+          && github.event.pull_request.head.repo.full_name != github.repository
+        run: |
+          echo "::warning::The formatters changed files, but this PR comes from a fork and GITHUB_TOKEN cannot push to it. Run the formatters locally and commit the result."
+          git diff --stat
+
       - name: Commit and push changes
-        if: steps.verify_diff.outputs.changed == 'true'
+        if: >-
+          steps.verify_diff.outputs.changed == 'true'
+          && (github.event_name != 'pull_request'
+          || github.event.pull_request.head.repo.full_name == github.repository)
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
