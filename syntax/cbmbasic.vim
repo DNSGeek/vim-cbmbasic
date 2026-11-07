@@ -7,7 +7,7 @@
 " the three reserved variables TI, TI$ and ST. Nothing else is a keyword in
 " V2; see the note on cbmBasicNonV2 near the bottom.
 
-if exists("b:current_syntax")
+if exists('b:current_syntax')
     finish
 endif
 
@@ -138,4 +138,4 @@ hi def link cbmBasicLineRef     Label
 
 " Must be set last. The previous version set it on line 10, before defining
 " any rules, which defeats the guard at the top of this file.
-let b:current_syntax = "cbmbasic"
+let b:current_syntax = 'cbmbasic'
