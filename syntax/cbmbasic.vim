@@ -1,13 +1,13 @@
 " Vim syntax file
 " Language:     Commodore BASIC V2 (C64, VIC-20, PET)
 " Maintainer:   Thomas Knox
-" Last Change:  2026 Aug 09
+" Last Change:  2026 Nov 07
 "
 " Keywords are the BASIC V2 token table, $80 (END) through $CB (GO), plus
 " the three reserved variables TI, TI$ and ST. Nothing else is a keyword in
 " V2; see the note on cbmBasicNonV2 near the bottom.
 
-if exists("b:current_syntax")
+if exists('b:current_syntax')
     finish
 endif
 
@@ -78,8 +78,11 @@ syn keyword cbmBasicNonV2 TIME TIME$ STATUS
 " A closing quote is optional at end of line in Commodore BASIC:
 "   10 PRINT "HELLO
 " is perfectly legal. Without 'oneline' that unterminated string swallows
-" the rest of the file. There are no backslash escapes, so nothing to skip.
-syn region cbmBasicString start=+"+ end=+"+ oneline contains=cbmBasicCtrlCode
+" the rest of the file. The second end pattern, +$+, is what makes the
+" unterminated form match at all: with only a closing quote to end on, the
+" region fails and the string gets no highlighting whatsoever.
+" There are no backslash escapes, so nothing to skip.
+syn region cbmBasicString start=+"+ end=+"+ end=+$+ oneline contains=cbmBasicCtrlCode
 
 " Control code escapes as written by petcat, CBM prg Studio and friends:
 " {clr}, {down}, {rvs on}, {red}, {2 spaces} and so on.
@@ -104,7 +107,10 @@ syn match cbmBasicLineNumber "^\s*\d\+\>"
 
 " A line number used as a jump target reads better as a label than as a
 " number, so GOTO 100 and THEN 100 pick up their own group.
-syn match cbmBasicLineRef "\<\%(GOTO\|GOSUB\|THEN\|GO\s\+TO\)\s\+\zs\d\+\%(\s*,\s*\d\+\)*"
+" This has to be a lookbehind, not \zs: a match that *starts* on the keyword
+" never gets a chance, because a syn keyword always outranks a syn match at
+" the same position. The engine would take the keyword and advance past it.
+syn match cbmBasicLineRef "\%(\<\%(GOTO\|GOSUB\|THEN\|GO\s\+TO\)\s*\)\@<=\d\+\%(\s*,\s*\d\+\)*"
 
 " --------------------------------------------------------------------- sync
 syn sync minlines=1 maxlines=2
@@ -132,4 +138,4 @@ hi def link cbmBasicLineRef     Label
 
 " Must be set last. The previous version set it on line 10, before defining
 " any rules, which defeats the guard at the top of this file.
-let b:current_syntax = "cbmbasic"
+let b:current_syntax = 'cbmbasic'

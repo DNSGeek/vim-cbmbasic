@@ -2,7 +2,7 @@
 " Language:   Commodore BASIC V2
 " Maintainer: Thomas Knox
 
-if exists("b:did_ftplugin")
+if exists('b:did_ftplugin')
     finish
 endif
 let b:did_ftplugin = 1
@@ -28,4 +28,4 @@ setlocal foldmethod=manual
 setlocal colorcolumn=80
 
 let b:undo_ftplugin =
-    \ "setlocal fo< com< cms< isk< wrap< ai< si< fdm< cc<"
+    \ 'setlocal fo< com< cms< isk< wrap< ai< si< fdm< cc<'
